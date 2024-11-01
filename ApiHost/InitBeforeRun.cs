@@ -1,4 +1,5 @@
-﻿using PredefinedFilterDemo.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PredefinedFilterDemo.Data;
 using PredefinedFilterDemo.Dtos.School;
 
 namespace PredefinedFilterDemo;
@@ -9,6 +10,8 @@ static class InitBeforeRun
     {
         using var scope = app.Services.CreateScope();
         using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        context.Database.Migrate();
 
         if (context.Semesters.Any())
             return;
@@ -36,12 +39,12 @@ static class InitBeforeRun
         // Create Teachers
         var teachers = new List<Teacher>();
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             teachers.Add(new Teacher
             {
                 Name = $"Teacher {i + 1}",
-                EmploymentFrom = new DateTime(2019, 1, 1).AddMonths(i * 6)
+                EmploymentFrom = new DateTime(2019, 1, 1).AddMonths(i * 6 / 10)
             });
         }
         context.Teachers.AddRange(teachers);
@@ -50,7 +53,7 @@ static class InitBeforeRun
         // Create Courses
         var courses = new List<Course>();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
             courses.Add(new Course
             {
@@ -110,7 +113,7 @@ static class InitBeforeRun
         // Create Students
         var students = new List<Student>();
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             var birthday = new DateTime(1995, 1, 1).AddDays(rand.Next(365 * 10));
 
@@ -129,7 +132,7 @@ static class InitBeforeRun
         foreach (var student in students)
         {
             // Assign 5 random SemesterCourses to each student
-            var randomSemesterCourses = semesterCourses.OrderBy(x => rand.Next()).Take(5).ToList();
+            var randomSemesterCourses = semesterCourses.OrderBy(x => rand.Next()).Take(rand.Next(1,10)).ToList();
 
             foreach (var semesterCourse in randomSemesterCourses)
             {

@@ -5,6 +5,9 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>PredefinedFilterDemo</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<OutputPath>../Output/ApiHost</OutputPath>
+		<AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
+		<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
