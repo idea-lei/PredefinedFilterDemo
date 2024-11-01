@@ -9,7 +9,7 @@ public enum StudentFilterType
 {
     [ParameterPattern(Pattern = "(DateTime)from|(DateTime)to", Example = "2000-01-01|2010-01-01")]
     Birthday,
-    [ParameterPattern(Pattern = "(int)min|(int)max", Example = "80")]
+    [ParameterPattern(Pattern = "(int)min|(int)max", Example = "80|85")]
     BestScore
 }
 
