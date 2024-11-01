@@ -2,6 +2,7 @@
 using PredefinedFilterDemo.Dtos.School;
 using PredefinedFilterDemo.Filters;
 using PredefinedFilterDemo.Filters.Infrastructure;
+using System.ComponentModel;
 
 namespace PredefinedFilterDemo.Controllers.FilterCollections;
 
@@ -9,8 +10,10 @@ public enum StudentFilterType
 {
     [ParameterPattern(Pattern = "(DateTime)from|(DateTime)to", Example = "2000-01-01|2010-01-01")]
     Birthday,
-    [ParameterPattern(Pattern = "(int)min|(int)max", Example = "80|85")]
-    BestScore
+    [ParameterPattern(Pattern = "(int)score", Example = "99")]
+    [Description("The best score of all exams should greater than or equal to..")]
+    BestScore,
+
 }
 
 public class StudentFilterCollection : IFilterCollection<Student>
@@ -39,7 +42,7 @@ public class StudentFilterCollection : IFilterCollection<Student>
                     collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.Birthday));
                     break;
                 case StudentFilterType.BestScore:
-                    collection._filters.Add(NumberFilter<Student>.FromTo(filterStr, s => s.Exams.Max(e=>e.Score)));
+                    collection._filters.Add(NumberFilter<Student>.GreaterThanOrEqual(filterStr, s => s.Exams!.Max(e=>e.Score)));
                     break;
             }
         }
