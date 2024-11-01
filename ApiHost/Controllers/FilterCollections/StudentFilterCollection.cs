@@ -10,10 +10,14 @@ public enum StudentFilterType
 {
     [ParameterPattern(Pattern = "(DateTime)from|(DateTime)to", Example = "2000-01-01|2010-01-01")]
     Birthday,
+
     [ParameterPattern(Pattern = "(int)score", Example = "99")]
     [Description("The best score of all exams should greater than or equal to..")]
-    BestScore,
+    MinBestScore,
 
+    [ParameterPattern(Pattern = "(int)course amount", Example = "8")]
+    [Description("The min courses taken")]
+    MinCourses
 }
 
 public class StudentFilterCollection : IFilterCollection<Student>
@@ -41,8 +45,11 @@ public class StudentFilterCollection : IFilterCollection<Student>
                 case StudentFilterType.Birthday:
                     collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.Birthday));
                     break;
-                case StudentFilterType.BestScore:
+                case StudentFilterType.MinBestScore:
                     collection._filters.Add(NumberFilter<Student>.GreaterThanOrEqual(filterStr, s => s.Exams!.Max(e=>e.Score)));
+                    break;
+                case StudentFilterType.MinCourses:
+                    collection._filters.Add(NumberFilter<Student>.GreaterThanOrEqual(filterStr, s => s.Courses.Count()));
                     break;
             }
         }
