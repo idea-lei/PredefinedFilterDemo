@@ -46,4 +46,26 @@ public sealed class StringFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
 
         return new StringFilter<TEntity>() { Predicate = predicate };
     }
+
+    public static StringFilter<TEntity> Equal(string filterString, Expression<Func<TEntity, string>> propertyAccessor, bool ignoreCase = true)
+    {
+        int pipeIndex = filterString.IndexOf('|');
+        string arg = filterString[(pipeIndex + 1)..].Trim();
+
+        var parameter = propertyAccessor.Parameters[0];
+        var propertyExpression = propertyAccessor.Body;
+
+        if (ignoreCase)
+        {
+            var toLowerMethod = typeof(string).GetMethod(nameof(string.ToLower), Type.EmptyTypes);
+            propertyExpression = Expression.Call(propertyExpression, toLowerMethod!);
+            arg = arg.ToLower();
+        }
+
+        var argExpression = Expression.Constant(arg);
+        var equalExpression = Expression.Equal(propertyExpression, argExpression);
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
+
+        return new StringFilter<TEntity> { Predicate = predicate };
+    }
 }
