@@ -10,6 +10,12 @@ public class Student
     public string Name { get; set; }
     public DateTime Birthday { get; set; }
 
+    public DateTime EntranceTime { get; set; }
+
+    public DateTime? GraduationTime { get; set; }
+
+    public bool Graduated => GraduationTime != null;
+
     public ICollection<SemesterCourse> Courses { get; set; }
 
     public ICollection<ExamResult>? Exams { get; set; }

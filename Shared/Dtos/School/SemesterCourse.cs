@@ -14,7 +14,10 @@ public class SemesterCourse
 
     public Teacher Teacher { get; set; }
 
-    public Exam Exam { get; set; }
+    /// <summary>
+    /// Course may not have exam
+    /// </summary>
+    public Exam? Exam { get; set; }
 
     public ICollection<Student>? Students { get; set; }
 }

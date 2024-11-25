@@ -17,7 +17,11 @@ public enum StudentFilterType
 
     [ParameterPattern(Pattern = "(int)course amount", Example = "8")]
     [Description("The min courses taken")]
-    MinCourses
+    MinCourses,
+
+    [ParameterPattern(Pattern = "(DateTime)from|(DateTime)to", Example = "2000-01-01|2010-01-01")]
+    [Description("Graduated in the time range")]
+    GraduationDate,
 }
 
 public class StudentFilterCollection : IFilterCollection<Student>
@@ -50,6 +54,10 @@ public class StudentFilterCollection : IFilterCollection<Student>
                     break;
                 case StudentFilterType.MinCourses:
                     collection._filters.Add(NumberFilter<Student>.GreaterThanOrEqual(filterStr, s => s.Courses.Count()));
+                    break;
+                case StudentFilterType.GraduationDate:
+                    collection._filters.Add(NullFilter<Student>.NotNull(s => s.GraduationTime));
+                    //collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.GraduationTime!.Value));
                     break;
             }
         }

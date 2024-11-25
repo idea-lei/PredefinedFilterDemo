@@ -91,6 +91,13 @@ static class InitBeforeRun
                     Teacher = teacher
                 };
 
+                bool hasExam = rand.Next(3) > 0;
+                if (!hasExam)
+                {
+                    semesterCourses.Add(semesterCourse);
+                    continue;
+                }
+
                 // Create Exam for this SemesterCourse
                 var examDate = semester.To.AddDays(-7);
 
@@ -116,11 +123,14 @@ static class InitBeforeRun
         for (int i = 0; i < 5000; i++)
         {
             var birthday = new DateTime(1995, 1, 1).AddDays(rand.Next(365 * 10));
+            var entranceTime = new DateTime(birthday.Year + rand.Next(5, 15), 9, 1);
 
             students.Add(new Student
             {
                 Name = $"Student {i + 1}",
-                Birthday = birthday
+                Birthday = birthday,
+                EntranceTime = entranceTime,
+                GraduationTime = rand.Next(2) == 0 ? null : (entranceTime + TimeSpan.FromDays(365 * 4))
             });
         }
         context.Students.AddRange(students);
@@ -132,7 +142,7 @@ static class InitBeforeRun
         foreach (var student in students)
         {
             // Assign 5 random SemesterCourses to each student
-            var randomSemesterCourses = semesterCourses.OrderBy(x => rand.Next()).Take(rand.Next(1,10)).ToList();
+            var randomSemesterCourses = semesterCourses.OrderBy(x => rand.Next()).Take(rand.Next(1, 10)).ToList();
 
             foreach (var semesterCourse in randomSemesterCourses)
             {
@@ -140,6 +150,9 @@ static class InitBeforeRun
                 if (semesterCourse.Students == null)
                     semesterCourse.Students = new List<Student>();
                 semesterCourse.Students.Add(student);
+
+                if (semesterCourse.Exam == null)
+                    continue;
 
                 // Create ExamResult
                 var examResult = new ExamResult
