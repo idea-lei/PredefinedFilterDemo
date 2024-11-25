@@ -11,7 +11,7 @@ namespace PredefinedFilterDemo.Controllers;
 [Route("odata/school")]
 public class SchoolODataController(AppDbContext db) : ODataController
 {
-    [HttpGet("students-filters")]
+    [HttpGet("students/filters")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<FilterDescriptorDto>))]
     public IActionResult GetStudentsFilters()
     {
@@ -28,5 +28,24 @@ public class SchoolODataController(AppDbContext db) : ODataController
 
         var filterCollection = StudentFilterCollection.Parse(filters);
         return Ok(filterCollection.Filter(db.Students));
+    }
+
+    [HttpGet("semester-courses/filters")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<FilterDescriptorDto>))]
+    public IActionResult GetSemesterCoursesFilters()
+    {
+        return Ok(SemesterCourseFilterCollection.FilterDescriptors);
+    }
+
+    [HttpGet("semester-courses")]
+    [EnableQuery]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<SemesterCourse>))]
+    public IActionResult GetSemesterCourses([FromQuery] string[]? filters)
+    {
+        if (filters == null || filters.Length == 0)
+            return Ok(db.SemesterCourses);
+
+        var filterCollection = SemesterCourseFilterCollection.Parse(filters);
+        return Ok(filterCollection.Filter(db.SemesterCourses));
     }
 }

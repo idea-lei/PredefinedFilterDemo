@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PredefinedFilterDemo.Data;
 
@@ -10,9 +11,11 @@ using PredefinedFilterDemo.Data;
 namespace PredefinedFilterDemo.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125201012_StudentTimes")]
+    partial class StudentTimes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -33,7 +36,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.Exam", b =>
@@ -56,7 +59,7 @@ namespace PredefinedFilterDemo.Data.Migrations
                     b.HasIndex("SemesterCourseId")
                         .IsUnique();
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.ExamResult", b =>
@@ -83,7 +86,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ExamResults", (string)null);
+                    b.ToTable("ExamResults");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.Semester", b =>
@@ -100,7 +103,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Semesters", (string)null);
+                    b.ToTable("Semesters");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.SemesterCourse", b =>
@@ -126,7 +129,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("SemesterCourses", (string)null);
+                    b.ToTable("SemesterCourses");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.Student", b =>
@@ -150,7 +153,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.Teacher", b =>
@@ -168,7 +171,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers", (string)null);
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("SemesterCourseStudent", b =>
@@ -183,7 +186,7 @@ namespace PredefinedFilterDemo.Data.Migrations
 
                     b.HasIndex("StudentsId");
 
-                    b.ToTable("SemesterCourseStudent", (string)null);
+                    b.ToTable("SemesterCourseStudent");
                 });
 
             modelBuilder.Entity("PredefinedFilterDemo.Dtos.School.Exam", b =>
