@@ -56,8 +56,7 @@ public class StudentFilterCollection : IFilterCollection<Student>
                     collection._filters.Add(NumberFilter<Student>.GreaterThanOrEqual(filterStr, s => s.Courses.Count()));
                     break;
                 case StudentFilterType.GraduationDate:
-                    collection._filters.Add(NullFilter<Student>.NotNull(s => s.GraduationTime));
-                    //collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.GraduationTime!.Value));
+                    collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.GraduationTime!.Value));
                     break;
             }
         }

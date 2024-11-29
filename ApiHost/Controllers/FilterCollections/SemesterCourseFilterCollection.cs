@@ -1,8 +1,7 @@
-﻿using PredefinedFilterDemo.Dtos.School;
-using PredefinedFilterDemo.Dtos;
+﻿using PredefinedFilterDemo.Dtos;
+using PredefinedFilterDemo.Dtos.School;
 using PredefinedFilterDemo.Filters;
 using PredefinedFilterDemo.Filters.Infrastructure;
-using System.ComponentModel;
 
 namespace PredefinedFilterDemo.Controllers.FilterCollections;
 
@@ -37,7 +36,6 @@ public class SemesterCourseFilterCollection : IFilterCollection<SemesterCourse>
             {
                 case SemesterCourseFilterType.HasExam:
                     collection._filters.Add(NullFilter<SemesterCourse>.NotNull(s => s.Exam));
-                    //collection._filters.Add(DateTimeFilter<Student>.FromTo(filterStr, s => s.GraduationTime!.Value));
                     break;
             }
         }

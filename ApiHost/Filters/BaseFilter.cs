@@ -10,7 +10,7 @@ public class BaseFilter<TEntity> where TEntity : class
     /// <summary>
     /// If predicate is null, you must implement the Filter method by your self
     /// </summary>
-    public required Expression<Func<TEntity, bool>>? Predicate { private get; init; }
+    public required Expression<Func<TEntity, bool>>? Predicate { internal get; init; }
 
     /// <summary>
     /// If predicate is null, you must implement the Filter method by your self

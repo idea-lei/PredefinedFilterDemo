@@ -44,30 +44,6 @@ public sealed class NumberFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
     }
 
     /// <summary>
-    /// Filter property that GreaterThanOrEqual the given value from filterString
-    /// </summary>
-    public static NumberFilter<TEntity> GreaterThanOrEqual<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
-        where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
-    {
-        return Compare(filterString, propertyAccessor, Expression.GreaterThanOrEqual);
-    }
-
-    /// <summary>
-    /// Filter property that LessThanOrEqual the given value from filterString
-    /// </summary>
-    public static NumberFilter<TEntity> LessThanOrEqual<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
-        where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
-    {
-        return Compare(filterString, propertyAccessor, Expression.LessThanOrEqual);
-    }
-
-    public static NumberFilter<TEntity> Equals<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
-    where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
-    {
-        return Compare(filterString, propertyAccessor, Expression.Equal);
-    }
-
-    /// <summary>
     /// Filters property that is one of the elements
     /// </summary>
     public static NumberFilter<TEntity> IsOneOf<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
@@ -90,13 +66,27 @@ public sealed class NumberFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
         return new NumberFilter<TEntity>() { Predicate = predicate };
     }
 
-    /// <summary>
-    /// Filters property that equals the parameter
-    /// </summary>
+    public static NumberFilter<TEntity> GreaterThanOrEqual<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
+        where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
+    {
+        return Compare(filterString, propertyAccessor, Expression.GreaterThanOrEqual);
+    }
+
+    public static NumberFilter<TEntity> LessThanOrEqual<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
+        where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
+    {
+        return Compare(filterString, propertyAccessor, Expression.LessThanOrEqual);
+    }
+
+    public static NumberFilter<TEntity> Equal<TNumber>(string filterString, Expression<Func<TEntity, TNumber>> propertyAccessor)
+        where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
+    {
+        return Compare(filterString, propertyAccessor, Expression.Equal);
+    }
 
     private static NumberFilter<TEntity> Compare<TNumber>(
-        string filterString, 
-        Expression<Func<TEntity, TNumber>> propertyAccessor, 
+        string filterString,
+        Expression<Func<TEntity, TNumber>> propertyAccessor,
         Func<Expression, Expression, BinaryExpression> compareFunc)
         where TNumber : INumber<TNumber>, IMinMaxValue<TNumber>
     {
@@ -112,9 +102,9 @@ public sealed class NumberFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
         var property = propertyAccessor.Body;
 
         var targetConstant = Expression.Constant(target, typeof(TNumber));
-        var equalExpression = compareFunc(property, targetConstant);
+        var expression = compareFunc(property, targetConstant);
 
-        var predicate = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
 
         return new NumberFilter<TEntity>() { Predicate = predicate };
     }

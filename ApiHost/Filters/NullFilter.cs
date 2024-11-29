@@ -7,21 +7,41 @@ namespace PredefinedFilterDemo.Filters;
 /// </remarks>
 public class NullFilter<TEntity> : BaseFilter<TEntity> where TEntity : class
 {
+    /// <summary>
+    /// This method is generally not needed, null value will by default be ruled out
+    /// </summary>
     public static NullFilter<TEntity> NotNull<TProperty>(Expression<Func<TEntity, TProperty>> propertyAccessor)
-        => Create(propertyAccessor, Expression.NotEqual);
+        => Create(propertyAccessor, ExpressionType.NotEqual);
 
+    /// <summary>
+    /// To only include null values
+    /// </summary>
     public static NullFilter<TEntity> Null<TProperty>(Expression<Func<TEntity, TProperty>> propertyAccessor)
-        => Create(propertyAccessor, Expression.Equal);
+        => Create(propertyAccessor, ExpressionType.Equal);
 
     private static NullFilter<TEntity> Create<TProperty>(
         Expression<Func<TEntity, TProperty>> propertyAccessor,
-        Func<Expression, Expression, BinaryExpression> checkFunc)
+        ExpressionType expressionType)
     {
         var parameter = propertyAccessor.Parameters[0];
         var property = propertyAccessor.Body;
-        var nullCheckExpression = checkFunc(property, Expression.Constant(null, typeof(TProperty)));
 
-        var predicate = Expression.Lambda<Func<TEntity, bool>>(nullCheckExpression, parameter);
-        return new NullFilter<TEntity>() { Predicate = predicate };
+        // Determine if TProperty is nullable (either a reference type or Nullable<T>)
+        var isNullable = !typeof(TProperty).IsValueType || Nullable.GetUnderlyingType(typeof(TProperty)) != null;
+
+        Expression predicateBody;
+
+        if (isNullable)
+        {
+            // For nullable types, compare the property to null
+            var nullConstant = Expression.Constant(null, property.Type);
+            predicateBody = Expression.MakeBinary(expressionType, property, nullConstant);
+        }
+        else
+            predicateBody = Expression.Constant(expressionType != ExpressionType.Equal);
+
+
+        var predicate = Expression.Lambda<Func<TEntity, bool>>(predicateBody, parameter);
+        return new NullFilter<TEntity> { Predicate = predicate };
     }
 }

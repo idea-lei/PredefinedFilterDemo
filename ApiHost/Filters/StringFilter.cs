@@ -19,9 +19,6 @@ public sealed class StringFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
         var parameter = propertyAccessor.Parameters[0];
         var propertyExpression = propertyAccessor.Body;
 
-        // Ensure the property is of type string
-        var strProperty = propertyExpression;
-
         // Build the pattern for case-insensitive search
         var likePattern = $"%{arg}%";
         var likePatternExpression = Expression.Constant(likePattern);
@@ -38,7 +35,7 @@ public sealed class StringFilter<TEntity> : BaseFilter<TEntity> where TEntity : 
         var likeCallExpression = Expression.Call(
             likeMethod,
             efFunctionsProperty,
-            strProperty,
+            propertyExpression,
             likePatternExpression
         );
 
